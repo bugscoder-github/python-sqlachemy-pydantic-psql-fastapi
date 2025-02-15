@@ -4,6 +4,10 @@ from pydantic import BaseModel, EmailStr
 from typing import Optional
 from db.db_connection import Base
 
+class SkillType(BaseModel):
+    type: str
+    level: str
+
 class Skill_assess(Base):
     __tablename__ = "skill_assess"
     

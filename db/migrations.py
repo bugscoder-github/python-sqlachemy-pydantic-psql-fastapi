@@ -5,9 +5,10 @@ from crud import add_columns_to_table
 session = SessionLocal()
 
 # Modify table
-# add_columns_to_table(session, "users", {
-#     "about": "TEXT"
-# })
+add_columns_to_table(session, "users", {
+    # "resume": "TEXT"
+    "resume_base64": "TEXT"
+})
 
 # add_columns_to_table(session, "skill_assess", {
 #     "level": "TEXT"

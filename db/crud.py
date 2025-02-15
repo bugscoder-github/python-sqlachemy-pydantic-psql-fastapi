@@ -59,11 +59,12 @@ def get_data(session: Session, model, filters: dict = None):
         
         if filters:
             query = query.filter_by(**filters)
-            result = query.first()
-            if not result:
-                print(f"No record found in {model.__tablename__} matching {filters}")
-                return {"error": "No record found"}
-            return result
+            # # result = query.first()
+            # result = query.all()
+            # if not result:
+            #     print(f"No record found in {model.__tablename__} matching {filters}")
+            #     return {"error": "No record found"}
+            # return result
 
         result = query.all()
         if not result:

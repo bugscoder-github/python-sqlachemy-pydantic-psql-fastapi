@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Float
+from sqlalchemy import Column, Integer, String, ForeignKey, Float, Table
 from sqlalchemy.orm import relationship
 from pydantic import BaseModel, EmailStr
 from typing import Optional
@@ -24,3 +24,18 @@ class User(Base):
     password = Column(String, nullable=False)
     type = Column(String, default="Pending")
     about = Column(String, nullable=True)
+    resume = Column(String, nullable=True)
+    resume_base64 = Column(String, nullable=True)
+
+    skills = relationship('UserSkills', back_populates='user', lazy="joined")
+
+
+class UserSkills(Base):
+    __tablename__ = "users_jobs"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    name = Column(String, nullable=False)
+    level = Column(String, nullable=False)
+
+    user = relationship('User', back_populates='skills')
