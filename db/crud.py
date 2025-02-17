@@ -52,21 +52,28 @@ def delete_data(session: Session, model, filters: dict):
         print(f"Error deleting from {model.__tablename__}: {e}")
         return False
 
-def get_data(session: Session, model, filters: dict = None):
-    """Fetches records from the database with error handling."""
+def get_data(session: Session, model, filters=None):
+    """Fetches records from the database with support for both list and dict filters."""
     try:
         query = session.query(model)
         
         if filters:
-            query = query.filter_by(**filters)
-            # # result = query.first()
-            # result = query.all()
-            # if not result:
-            #     print(f"No record found in {model.__tablename__} matching {filters}")
-            #     return {"error": "No record found"}
-            # return result
+            if isinstance(filters, list):  # New format: List of dictionaries
+                conditions = [
+                    and_(*(getattr(model, key).ilike(f"%{value}%") if isinstance(value, str) else getattr(model, key) == value
+                           for key, value in f.items()))
+                    for f in filters
+                ]
+                query = query.filter(or_(*conditions))
 
+            elif isinstance(filters, dict):  # Old format: Single dictionary
+                query = query.filter(
+                    *(getattr(model, key).ilike(f"%{value}%") if isinstance(value, str) else getattr(model, key) == value
+                      for key, value in filters.items())
+                )
+                
         result = query.all()
+
         if not result:
             print(f"No record found in {model.__tablename__} matching {filters}")
             return {"error": "No record found"}

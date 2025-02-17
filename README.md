@@ -35,3 +35,25 @@ run from the root folder
 ```
 python3 -m seeds.<filename>
 ```
+
+### get data can be dict or list
+
+if dict
+
+```
+def get_skill_assess(query: SkillType, db: Session = Depends(get_db)):
+    result = get_data(db, Skill_assess, query.dict())
+    if not result:
+        raise HTTPException(status_code=400, detail=result["error"])
+    return result
+```
+
+if list
+
+```
+def get_skill_assess(query: List[SkillType], db: Session = Depends(get_db)):
+    result = get_data(db, Skill_assess, [q.dict() for q in query])
+    if not result:
+        raise HTTPException(status_code=400, detail=result["error"])
+    return result
+```
